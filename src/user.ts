@@ -1,6 +1,6 @@
 import { renderBlock } from './lib.js'
 
-export function renderUserBlock(name: string, link: string, count: number) {
+export function renderUserBlock(name: string, link: string, count?: number) {
   const isFavorite = !!count;
 
   renderBlock(

@@ -36,7 +36,7 @@ type TMonth = `${'0' | '1'}${number}`;
 type TDay = `${'0' | '1' | '2' | '3'}${number}`;
 
 type TDMY = `${TDay}.${TMonth}.${TYear}`;
-type TDMYY = `${TDay}.${TMonth}.20${TYear}`;
+export type TDMYY = `${TDay}.${TMonth}.20${TYear}`;
 type TYMD = `20${TYear}-${TMonth}-${TDay}`;
 
 export type TDate = TDMY | TDMYY | TYMD
@@ -65,3 +65,36 @@ export const getCurDate = (): Date => (new Date());
 export const getLastDayOfMonth = (date: Date): Date => (new Date(date.getFullYear(), date.getMonth() + 1, 0));
 
 export const addDays = (date: Date, days: number): Date => new Date(date.setDate(date.getDate() + days));
+
+export interface IUser {
+  username: string;
+  avatarUrl: string;
+}
+
+export function getUserData(): IUser {
+  const user: unknown = window.localStorage.getItem('user');
+
+  if (typeof user === 'string') {
+    return JSON.parse(user);
+  }
+}
+
+export function getFavoritesAmount(): number {
+  const favoritesAmount: unknown = window.localStorage.getItem('favoritesAmount');
+
+  if (favoritesAmount === null) {
+    return 0;
+  }
+
+  if (typeof favoritesAmount === 'string') {
+    return Number(favoritesAmount);
+  }
+}
+
+export const getFieldValue = (name: string): string | TDMYY => {
+  const el = <HTMLInputElement>document.getElementById(name);
+
+  if (el.value) {
+    return el.value || '';
+  }
+}
