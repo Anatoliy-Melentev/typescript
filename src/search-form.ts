@@ -1,6 +1,5 @@
-import {
-  renderBlock, createDT, TDate, getCurDate, getLastDayOfMonth, dateToYMD, addDays
-} from './lib.js';
+import { renderBlock, createDT, TDate, getCurDate, getLastDayOfMonth, dateToYMD, addDays } from './lib.js';
+import { getFormData } from "./getFormData.js";
 
 export function renderSearchFormBlock(startDate?: TDate, endDate?: TDate) {
   const startDT = startDate ? createDT(startDate) : addDays(getCurDate(), 1);
@@ -53,11 +52,13 @@ export function renderSearchFormBlock(startDate?: TDate, endDate?: TDate) {
             <input id="max-price" type="text" value="" name="price" class="max-price" />
           </div>
           <div>
-            <div><button>Найти</button></div>
+            <div><button id="search-btn">Найти</button></div>
           </div>
         </div>
       </fieldset>
     </form>
     `
-  )
+  );
+
+  document.getElementById('search-btn').addEventListener('click', getFormData);
 }
