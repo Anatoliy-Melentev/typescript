@@ -1,5 +1,6 @@
 import { renderBlock, createDT, TDate, getCurDate, getLastDayOfMonth, dateToYMD, addDays } from './lib.js';
 import { getFormData } from "./getFormData.js";
+import {emitter} from "./index.js";
 
 export function renderSearchFormBlock(startDate?: TDate, endDate?: TDate) {
   const startDT = startDate ? createDT(startDate) : addDays(getCurDate(), 1);
@@ -17,7 +18,7 @@ export function renderSearchFormBlock(startDate?: TDate, endDate?: TDate) {
           <div>
             <label for="city">Город</label>
             <input id="city" type="text" disabled value="Санкт-Петербург" />
-            <input type="hidden" disabled value="59.9386,30.3141" />
+            <input id="coordinates" type="hidden" disabled value="59.9386,30.3141" />
           </div>
           <!--<div class="providers">
             <label><input type="checkbox" name="provider" value="homy" checked /> Homy</label>
@@ -60,5 +61,17 @@ export function renderSearchFormBlock(startDate?: TDate, endDate?: TDate) {
     `
   );
 
-  document.getElementById('search-btn').addEventListener('click', getFormData);
+  const searchBtn = document.getElementById('search-btn');
+  if (searchBtn) {
+    searchBtn.addEventListener('click', getFormData);
+  }
+
+  const checkInDate = document.getElementById('check-in-date');
+  if (checkInDate) {
+    checkInDate.addEventListener('change', () => emitter.emit('event:touched-date', 'toast'));
+  }
+  const checkOutDate = document.getElementById('check-out-date');
+  if (checkOutDate) {
+    checkOutDate.addEventListener('change', () => emitter.emit('event:touched-date', 'toast'));
+  }
 }

@@ -1,7 +1,8 @@
-import { renderBlock } from './lib.js'
+import {getFavoriteItems, getUserData, renderBlock} from './lib.js'
 
-export function renderUserBlock(name: string, link: string, count?: number) {
-  const isFavorite = !!count;
+export function renderUserBlock() {
+  const { username: name, avatarUrl: link } = getUserData();
+  const isFavorite = getFavoriteItems().length;
 
   renderBlock(
     'user-block',
@@ -11,7 +12,7 @@ export function renderUserBlock(name: string, link: string, count?: number) {
       <div class="info">
           <p class="name">${name}</p>
           <p class="fav">
-            <i class="heart-icon${isFavorite ? ' active' : ''}"></i>${isFavorite ? count : 'ничего нет'}
+            <i class="heart-icon${isFavorite ? ' active' : ''}"></i>${isFavorite ? isFavorite : 'ничего нет'}
           </p>
       </div>
     </div>

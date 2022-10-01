@@ -1,20 +1,16 @@
-import { getFieldValue, TDMYY } from './lib.js';
+import { getDateFieldValue, getFieldValue } from './lib.js';
 import { search } from './search.js';
+import { emitter } from './index.js';
 
-export interface SearchFormData {
-  city: string;
-  checkInDate: TDMYY;
-  checkOutDate: TDMYY;
-  maxPrice: string;
-}
+export const getFormData = (e?: Event) => {
+  if (e) {
+    e.preventDefault();
+  }
 
-export const getFormData = () => {
-  const formData: SearchFormData = {
-    city: getFieldValue('city'),
-    checkInDate: <TDMYY>getFieldValue('check-in-date'),
-    checkOutDate: <TDMYY>getFieldValue('check-out-date'),
+  search({
+    checkInDate: getDateFieldValue('check-in-date'),
+    checkOutDate: getDateFieldValue('check-out-date'),
     maxPrice: getFieldValue('max-price'),
-  };
-
-  search(formData, result => console.log(result));
+    coordinates: getFieldValue('coordinates'),
+  }, result => emitter.emit('event:changed-date', result));
 }
