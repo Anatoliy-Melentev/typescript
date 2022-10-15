@@ -1,6 +1,6 @@
 //import {BadRequest} from '@feathersjs/errors';
 import pkg from '@feathersjs/errors';
-const { BadRequest, NotFound } = pkg;
+const { BadRequest } = pkg;
 import {Storage} from '../../database/Storage.js';
 import {DateHelper} from '../../helpers/DateHelper.js';
 import {Place} from '../Place.js';
@@ -36,7 +36,7 @@ export class PlaceRepository {
 
   public async book(place: Place, dateRange: Date[]): Promise<Place> {
     if (!this.checkIfPlaceAreAvailableForDates(place, dateRange)) {
-      throw new BadRequest(`Place ${place.id} is not available for dates ${dateRange.join(",")}.`);
+      throw new BadRequest(`Place ${place.id} is not available for dates ${dateRange.join(',')}.`);
     }
 
     const bookedDates = dateRange.map((date) => {

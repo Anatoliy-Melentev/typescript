@@ -1,4 +1,4 @@
-import {getFavoriteItems, getUserData, renderBlock} from './lib.js'
+import { getFavoriteItems, getUserData, renderBlock } from './lib.js'
 
 export function renderUserBlock() {
   const { username: name, avatarUrl: link } = getUserData();
