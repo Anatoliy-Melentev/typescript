@@ -1,10 +1,10 @@
 import { renderSearchFormBlock } from './search-form.js';
 import { renderEmptyOrErrorSearchBlock, renderSearchResultsBlock, renderSearchStubBlock } from './search-results.js';
 import { renderUserBlock } from './user.js';
-import { EventEmitter } from "./EventEmitter.js";
-import { IPlace, IError } from "./search.js";
-import { clearToast, createToast, renderToast } from "./lib.js";
-import { getFormData } from "./getFormData.js";
+import { EventEmitter } from './EventEmitter.js';
+import { clearToast, createToast, renderToast } from './lib.js';
+import { getFormData } from './getFormData.js';
+import { IError, IPlace } from './Api.js';
 
 export const emitter = new EventEmitter();
 
@@ -20,8 +20,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   emitter.subscribe('event:changed-date', (data: IError | IPlace[]) => {
     if (data) {
-      if (data.length) {// Как проверить что дата подходит для одного из типов IError | IPlace[]?
-        /// ТС вечно все перечеркивает без надобности.
+      if (Array.isArray(data)) {
         renderSearchResultsBlock(data);
       } else {
         renderEmptyOrErrorSearchBlock(data.message || 'Ничего не найдено');

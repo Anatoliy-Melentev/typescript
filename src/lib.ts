@@ -89,9 +89,9 @@ export function getUserData(): IUser {
   };
 }
 
-export function getFavoriteItems(): number[] {
+export function getFavoriteItems(): string[] {
   const favoriteItems: unknown = window.localStorage.getItem('favoriteItems');
-  let favorites: number[] = [];
+  let favorites: string[] = [];
 
   if (typeof favoriteItems === 'string') {
     const parse = JSON.parse(favoriteItems);
@@ -104,7 +104,7 @@ export function getFavoriteItems(): number[] {
 export const getFieldValue = (name: string): string | TDMYY => {
   const el = <HTMLInputElement>document.getElementById(name);
 
-    return el.value ? el.value : '';
+  return el.value ? el.value : '';
 }
 
 export function dateToUnixStamp(date: Date): number {

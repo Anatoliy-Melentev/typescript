@@ -1,9 +1,9 @@
-import { getFavoriteItems } from "./lib.js";
-import { getFormData } from "./getFormData.js";
-import { emitter } from "./index.js";
+import { getFavoriteItems } from './lib.js';
+import { getFormData } from './getFormData.js';
+import { emitter } from './index.js';
 
 
-export const toggleFavoriteItem = (id: number) => {
+export const toggleFavoriteItem = (id: string) => {
   let favorites = getFavoriteItems();
 
   if (!favorites.find(val => val === id)) {
