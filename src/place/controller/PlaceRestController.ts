@@ -14,16 +14,15 @@ import {DateHelper} from '../../helpers/DateHelper.js';
 export class PlaceRestController {
   constructor(private placeRepository: PlaceRepository) {}
 
-  public async get(id: NullableId, params?: Params): Promise<Place> {
+  public async get(id: NullableId, params?: Params): Promise<Place | undefined> {
     const numericId = Number(id);
     if (!isFinite(numericId) || numericId <= 0) {
       throw new BadRequest();
     }
 
-    const coordinates: string = params?.query?.coordinates || '';
     const place = await this.placeRepository.get(numericId);
 
-    if (place != null && coordinates === '') {
+    if (place != null && params && params.query && params.query['coordinates'] && params.query['coordinates'].length) {
       place.remoteness = 0;
     }
 
@@ -61,7 +60,7 @@ export class PlaceRestController {
 
   public async patch(id: NullableId, data: Partial<Place>, params?: Params): Promise<Place> {
     const numericId = Number(id);
-    console.log(`patc${id}hing`);
+    console.log(`patc${id}hing${Object.keys(data).join()}`);
     if (!isFinite(numericId) || numericId <= 0) {
       throw new BadRequest('Place ID is not correct.');
     }

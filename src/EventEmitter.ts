@@ -12,10 +12,11 @@ export class EventEmitter {
     if(!this.events[eventName]) {
       this.events[eventName] = [];
     }
-
+    // @ts-ignore;
     this.events[eventName].push(fn);
 
     return () => {
+      // @ts-ignore;
       this.events[eventName] = this.events[eventName].filter(eventFn => fn !== eventFn);
     }
   }

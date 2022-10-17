@@ -5,5 +5,6 @@ export interface Place {
   description: string;
   remoteness: number;
   bookedDates: number[];
+  availableDates?: number[];
   price: number;
 } 
