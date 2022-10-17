@@ -1,7 +1,6 @@
-import {getDateFieldValue, getFavoriteItems, getFieldValue, renderBlock} from './lib.js'
-import { IPlace } from "./search.js";
-import { toggleFavoriteItem } from "./toggleFavoriteItem.js";
-import {book} from "./book.js";
+import { getDateFieldValue, getFavoriteItems, renderBlock } from './lib.js'
+import { toggleFavoriteItem } from './toggleFavoriteItem.js';
+import { api, IPlace } from './Api.js';
 
 export function renderSearchStubBlock () {
   renderBlock(
@@ -45,10 +44,7 @@ export function renderSearchResultsBlock(data: IPlace[]) {
         </div>
     </div>
     <ul class="results-list" id="results-list">
-      ${data.map(place => renderPosBlock({
-        ...place,
-        isFavorite: favorites.includes(place.id),
-      })).join('')}
+  ${data.map(place => renderPosBlock({ ...place, isFavorite: favorites.includes(place.id) })).join('')}
     </ul>
     `
   );
@@ -63,11 +59,11 @@ export function renderSearchResultsBlock(data: IPlace[]) {
       if (e.target instanceof HTMLElement) {
         if (e.target?.classList?.contains('favorites') && e.target?.id) {
           const id = e.target.id.split('-')[1];
-          toggleFavoriteItem(Number(id));
+          toggleFavoriteItem(id);
         }
         if (e.target?.classList?.contains('book') && e.target?.id) {
-          const id = e.target.id.split('-')[1];
-          book(id,{
+          const data = e.target.id.split('-');
+          api.book(data[1], data[0], {
             checkInDate: getDateFieldValue('check-in-date'),
             checkOutDate: getDateFieldValue('check-out-date'),
           });
@@ -77,12 +73,12 @@ export function renderSearchResultsBlock(data: IPlace[]) {
   }
 }
 
-function renderPosBlock({ description, id, image, name, price, isFavorite }: IPlace) {
+function renderPosBlock({ description, id, image, name, price, isFavorite, type }: IPlace) {
   return `
       <li class="result">
         <div class="result-container">
           <div class="result-img-container">
-            <div id="fav-${id}" class="favorites${isFavorite ? ' active' : ''}"></div>
+            <div id="${type}-${id}" class="favorites${isFavorite ? ' active' : ''}"></div>
             <img class="result-img" src="${image}" alt="">
           </div>
           <div class="result-info">
@@ -94,7 +90,7 @@ function renderPosBlock({ description, id, image, name, price, isFavorite }: IPl
             <div class="result-info--descr">${description}</div>
             <div class="result-info--footer">
               <div>
-                <button class="book" id="book-${id}">Забронировать</button>
+                <button class="book" id="${type}-${id}">Забронировать</button>
               </div>
             </div>
           </div>
