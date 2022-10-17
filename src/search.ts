@@ -1,11 +1,49 @@
-import { SearchFormData } from "./getFormData.js";
+import { responseToJson } from "./responseToJson.js";
 
-interface Place {
-  array: [],
+export interface IPlace {
+  bookedDates: number[];
+  description: string;
+  id: number;
+  image: string;
+  name: string;
+  price: number;
+  remoteness: number;
+  isFavorite?: boolean;
 }
 
-export const search = (data: SearchFormData, callback: (v: string | Place) => void) => {
-  setTimeout(() => callback(Math.round(Math.random()) ? 'Ошибка' : { array: [] }), 3000);
+interface IArrayError {
+  message: string;
+  path: string[];
+  type: string;
+  context: {
+    key: string;
+    label: string;
+  };
+}
 
-  console.log(data);
+export interface IError {
+  className: string;
+  code: number;
+  data: IArrayError;
+  message: string;
+  name: string;
+  length?: number;
+}
+
+export interface SearchFormData {
+  checkInDate: string;
+  checkOutDate: string;
+  maxPrice: string;
+  coordinates: string;
+}
+
+export const search = async (params: SearchFormData, callback: (v: IError | IPlace[]) => void) => {
+  const data: unknown = await responseToJson(`http://localhost:3030/places?${
+    Object.entries(params).map(([key, value]) => value && `${key}=${value}`).join('&')
+  }`);
+
+  if (data && (Array.isArray(data) || typeof data === 'object')) {
+    callback(data);
+    // Как проверить что дата подходит для типов IError | IPlace[]?
+  }
 }

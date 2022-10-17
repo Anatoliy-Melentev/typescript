@@ -1,9 +1,18 @@
-export function renderBlock (elementId, html) {
-  const element = document.getElementById(elementId)
+export function renderBlock (elementId: string, html: string) {
+  const element = <HTMLElement>document.getElementById(elementId)
   element.innerHTML = html
 }
 
-export function renderToast (message, action) {
+interface IMsg {
+  type: string;
+  text: string;
+}
+interface IAction {
+  name?: string;
+  handler: () => void;
+}
+
+export function renderToast (message: IMsg | null, action: IAction) {
   let messageText = ''
   
   if (message != null) {
@@ -74,27 +83,49 @@ export interface IUser {
 export function getUserData(): IUser {
   const user: unknown = window.localStorage.getItem('user');
 
-  if (typeof user === 'string') {
-    return JSON.parse(user);
-  }
+  return typeof user === 'string' ? JSON.parse(user) : {
+    username: '',
+    avatarUrl: '',
+  };
 }
 
-export function getFavoritesAmount(): number {
-  const favoritesAmount: unknown = window.localStorage.getItem('favoritesAmount');
+export function getFavoriteItems(): number[] {
+  const favoriteItems: unknown = window.localStorage.getItem('favoriteItems');
+  let favorites: number[] = [];
 
-  if (favoritesAmount === null) {
-    return 0;
+  if (typeof favoriteItems === 'string') {
+    const parse = JSON.parse(favoriteItems);
+    favorites = Array.isArray(parse) ? parse : [];
   }
 
-  if (typeof favoritesAmount === 'string') {
-    return Number(favoritesAmount);
-  }
+  return favorites;
 }
 
 export const getFieldValue = (name: string): string | TDMYY => {
   const el = <HTMLInputElement>document.getElementById(name);
 
-  if (el.value) {
-    return el.value || '';
-  }
+    return el.value ? el.value : '';
 }
+
+export function dateToUnixStamp(date: Date): number {
+  return date.getTime() / 1000
+}
+
+export const getDateFieldValue = (name: string): string => {
+  if (!name) {
+    return '';
+  }
+  const value = <TDMYY>getFieldValue(name);
+  const DT = typeof value !== 'boolean' ? createDT(value) : null;
+
+  return DT instanceof Date ? dateToUnixStamp(DT).toString() : '';
+}
+
+export let timeout: ReturnType<typeof setTimeout>;
+
+export const createToast = (fn: () => void) => {
+  timeout = setTimeout(fn, 5 * 1000);
+}
+
+export const clearToast = () => clearTimeout(timeout);
+
