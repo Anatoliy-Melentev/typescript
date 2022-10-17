@@ -16,7 +16,7 @@ export interface IData {
 }
 
 export interface FlatRentSdk {
-  get: (id: string) => Promise;
-  search: (params: IParams) => Promise;
-  book: (id: string, checkInDate: number, checkOutDate: number) => Promise;
+  get: (id: string) => Promise<IData | Error>;
+  search: (params: IParams) => Promise<IData[] | Error>;
+  book: (id: string, checkInDate: number, checkOutDate: number) => Promise<number>;
 }

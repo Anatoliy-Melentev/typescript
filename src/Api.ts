@@ -172,7 +172,7 @@ class Api {
   createApiBookLink(id: string, params: IBookData) {
     const paramsStr = this.createApiBookParams(params);
 
-    if (paramsStr.length > 0) {
+    if (paramsStr.length > 0 && id.length) {
       return `${this.apiAddress}places/${id}?${paramsStr}`;
     }
 
@@ -180,31 +180,36 @@ class Api {
   }
   async book(id: string, type: string, params: IBookData) {
     let message = '';
-    if (type !== 'sdk') {
-      const link = this.createApiBookLink(id, params);
-
-      if (link.length === 0) {
-        return false;
-      }
-
-      const data = await this.responseToJson(link, 'PATCH');
-      if (data.message) {
-        message = data.message;
-      } else {
-        message = 'ok';
-      }
+    if (!id.length) {
+      message = 'Не передат id';
     } else {
-      try {
-        await this.sdk.book(id, new Date(params.checkInDate), new Date(params.checkOutDate))
-          //@ts-ignore;
-          .then((result) => {
-            message = 'ok';
-          })
-      } catch (e: unknown) {
-        message = e instanceof Error ? e.message : 'Ошибка';
-      }
+      if (type !== 'sdk') {
+        const link = this.createApiBookLink(id, params);
 
+        if (link.length === 0) {
+          return false;
+        }
+
+        const data = await this.responseToJson(link, 'PATCH');
+        if (data.message) {
+          message = data.message;
+        } else {
+          message = 'ok';
+        }
+      } else {
+        try {
+          await this.sdk.book(id, new Date(params.checkInDate), new Date(params.checkOutDate))
+            //@ts-ignore;
+            .then((result) => {
+              message = 'ok';
+            })
+        } catch (e: unknown) {
+          message = e instanceof Error ? e.message : 'Ошибка';
+        }
+
+      }
     }
+
     if (message !== 'ok') {
       renderToast({
         text: message,
@@ -222,6 +227,8 @@ class Api {
         handler: () => console.log('ok'),
       });
     }
+
+    return true;
   }
   createSdkData() {
     if (this.params) {

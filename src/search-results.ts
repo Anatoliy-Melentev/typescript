@@ -59,16 +59,21 @@ export function renderSearchResultsBlock(data: IPlace[]) {
       if (e.target instanceof HTMLElement) {
         if (e.target?.classList?.contains('favorites') && e.target?.id) {
           const id = e.target.id.split('-')[1];
-          toggleFavoriteItem(id);
+          if (id) {
+            toggleFavoriteItem(id);
+          }
         }
         if (e.target?.classList?.contains('book') && e.target?.id) {
           const data = e.target.id.split('-');
-          api.book(data[1], data[0], {
-            checkInDate: getDateFieldValue('check-in-date'),
-            checkOutDate: getDateFieldValue('check-out-date'),
-          });
+          if (data[1] && data[0]) {
+            api.book(data[1], data[0], {
+              checkInDate: getDateFieldValue('check-in-date'),
+              checkOutDate: getDateFieldValue('check-out-date'),
+            });
+          }
         }
       }
+      return true;
     });
   }
 }

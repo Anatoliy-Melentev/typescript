@@ -1,6 +1,6 @@
 import { renderBlock, createDT, TDate, getCurDate, getLastDayOfMonth, dateToYMD, addDays } from './lib.js';
-import { getFormData } from "./getFormData.js";
-import {emitter} from "./index.js";
+import { getFormData } from './getFormData.js';
+import {emitter} from './index.js';
 
 export function renderSearchFormBlock(startDate?: TDate, endDate?: TDate) {
   const startDT = startDate ? createDT(startDate) : addDays(getCurDate(), 1);
